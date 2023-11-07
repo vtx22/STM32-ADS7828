@@ -53,8 +53,7 @@ This function converts from digits to volts by mapping the digit to the referenc
 
 ### Scaling
 If you want to scale the voltage reading every time you call `read_voltage` you can set a fixed scaling factor. This is especially useful when working with voltages dividers, 
-as the ADC voltage gets converted to the actual voltage at the divider. However, scaling works only for voltage measurements to GND (Single-Ended Mode)!
-
+as the ADC voltage gets converted to the actual voltage at the divider.
 To set a scaling factor for a certain Channel, call
 ```
 adc.set_scaling(ADS7828_CHANNEL channel, float scaling);
@@ -63,6 +62,9 @@ To reset the scaling back to 1, you can call
 ```
 adc.reset_scaling(ADS7828_CHANNEL channel);
 ```
+
+:warning: Keep in mind, that CHANNEL_0_1 and CHANNEL_1_0 for example have different scaling factors!
+
 ### Reference Voltage
 All measurements done by the ADS7828 are with reference to the specified reference voltage. There are two types of operation:
 - ***Internal Reference:*** The ADC uses the internal voltage source of 2.5V as reference

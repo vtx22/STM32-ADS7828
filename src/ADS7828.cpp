@@ -138,12 +138,7 @@ void ADS7828::set_power_mode(ADS7828_PD_MODE mode)
  */
 void ADS7828::set_scaling(ADS7828_CHANNEL channel, float scaling)
 {
-	if (channel < 8)
-	{
-		return;
-	}
-
-	_scaling[channel - 8] = scaling;
+	_scaling[channel] = scaling;
 }
 
 /**
