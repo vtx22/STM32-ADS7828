@@ -6,6 +6,7 @@ C++ Library for interfacing the ADS7828 AD-Converter with STM32 microcontrollers
 - Read Digit Values or Voltages
 - Internal 2.5V or External Manual Voltage Reference, switchable at runtime
 - Power Down Modes with implicit switching
+- Fixed Scaling for Voltage Divider applications
 
 # Usage
 ### Init
