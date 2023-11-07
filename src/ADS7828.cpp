@@ -36,7 +36,7 @@ ADS7828::~ADS7828()
  */
 float ADS7828::read_voltage(ADS7828_CHANNEL channel)
 {
-	return read_digit(channel) * _ref_voltage / 4095.0;
+	return read_digit(channel) * _ref_voltage / 4095.0 * _scaling[channel];
 }
 
 /**
@@ -127,4 +127,26 @@ void ADS7828::set_power_mode(ADS7828_PD_MODE mode, bool update_now)
 void ADS7828::set_power_mode(ADS7828_PD_MODE mode)
 {
 	set_power_mode(mode, true);
+}
+
+/**
+ * Set the scaling for a channel voltage so that read_voltage returns voltage * scaling
+ * Only works for Single-Ended Mode, so only channel voltages to GND!
+ *
+ * @param channel The Channel to set the scaling for
+ * @param scaling Scaling Factor that will be multiplied with the voltage
+ */
+void ADS7828::set_scaling(ADS7828_CHANNEL channel, float scaling)
+{
+	_scaling[channel - 8] = scaling;
+}
+
+/**
+ * Reset the scaling for a channel voltage back to 1
+ *
+ * @param channel The Channel to reset the scaling for
+ */
+void ADS7828::reset_scaling(ADS7828_CHANNEL channel)
+{
+	set_scaling(channel, 1);
 }
