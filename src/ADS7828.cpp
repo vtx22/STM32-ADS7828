@@ -71,6 +71,11 @@ void ADS7828::set_ref_voltage_external(float ref_voltage)
 {
 	_ref_voltage = ref_voltage;
 
+	if (_pd_mode == REF_OFF)
+	{
+		return;
+	}
+
 	// If you choose an external voltage reference we have to change the mode accordingly
 	set_power_mode(REF_OFF, true);
 }
