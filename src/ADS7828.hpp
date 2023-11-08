@@ -9,6 +9,7 @@
 #define HAL_MAX_DELAY 100
 #endif
 
+#define ADS7828_CHANNELS 16
 // Defines the command bits for every possible channel selection (Datasheet Table 2)
 // Choice between "Differential" for voltage between two channels or "Single Ended" for voltage to ground (COM)
 enum ADS7828_CHANNEL
@@ -60,11 +61,12 @@ public:
 	void set_scaling(ADS7828_CHANNEL channel, float scaling);
 	float get_scaling(ADS7828_CHANNEL channel);
 	void reset_scaling(ADS7828_CHANNEL channel);
+	void reset_scaling();
 
 private:
-	float _scaling[16] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}; // Channel Voltage Scaling
-	float _ref_voltage = 2.5;															  // Using the internal 2.5V reference voltage by default
-	ADS7828_PD_MODE _pd_mode = REF_ON_AD_ON;										  // Current Power Down Mode
+	float _scaling[ADS7828_CHANNELS] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}; // Channel Voltage Scaling
+	float _ref_voltage = 2.5;																				 // Using the internal 2.5V reference voltage by default
+	ADS7828_PD_MODE _pd_mode = REF_ON_AD_ON;															 // Current Power Down Mode
 
 	uint8_t _address = 0x48;  // I2C Address
 	I2C_HandleTypeDef *_hi2c; // I2C Handle

@@ -159,3 +159,15 @@ void ADS7828::reset_scaling(ADS7828_CHANNEL channel)
 {
 	set_scaling(channel, 1);
 }
+
+/**
+ * Reset the scaling for all channels back to 1
+ *
+ */
+void ADS7828::reset_scaling()
+{
+	for (uint8_t c = 0; c < ADS7828_CHANNELS; c++)
+	{
+		reset_scaling(c);
+	}
+}

@@ -66,8 +66,12 @@ To reset the scaling back to 1, you can call
 ```
 adc.reset_scaling(ADS7828_CHANNEL channel);
 ```
+or for all channels 
+```
+adc.reset_scaling();
+```
 
-:warning: Keep in mind, that CHANNEL_0_1 and CHANNEL_1_0 for example have different scaling factors!
+:warning: Keep in mind, that `CHANNEL_0_1` and `CHANNEL_1_0` for example have different scaling factors!
 
 ### Reference Voltage
 All measurements done by the ADS7828 are with reference to the specified reference voltage. There are two types of operation:
