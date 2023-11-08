@@ -61,9 +61,9 @@ public:
 	void reset_scaling(ADS7828_CHANNEL channel);
 
 private:
-	float _scaling[8] = {1, 1, 1, 1, 1, 1, 1, 1}; // Channel Voltage Scaling
-	float _ref_voltage = 2.5;							 // Using the internal 2.5V reference voltage by default
-	ADS7828_PD_MODE _pd_mode = REF_ON_AD_ON;		 // Current Power Down Mode
+	float _scaling[16] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}; // Channel Voltage Scaling
+	float _ref_voltage = 2.5;															  // Using the internal 2.5V reference voltage by default
+	ADS7828_PD_MODE _pd_mode = REF_ON_AD_ON;										  // Current Power Down Mode
 
 	uint8_t _address = 0x48;  // I2C Address
 	I2C_HandleTypeDef *_hi2c; // I2C Handle
