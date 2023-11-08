@@ -168,6 +168,6 @@ void ADS7828::reset_scaling()
 {
 	for (uint8_t c = 0; c < ADS7828_CHANNELS; c++)
 	{
-		reset_scaling(c);
+		reset_scaling(static_cast<ADS7828_CHANNEL>(c));
 	}
 }
