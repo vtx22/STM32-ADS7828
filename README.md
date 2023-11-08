@@ -29,13 +29,13 @@ With 12 Bits resolution the returned value is between 0 and 4095.
 
 
 The ADS7828 supports two types of readings:
-- ***Single-Ended:*** Reads the Channel Voltage with reference to GROUND
+- ***Single-Ended:*** Reads the Channel Voltage with reference to COM
 - ***Differential:*** Reads the Voltage between two channels
 
 All supported measurements are specified in the `ADS7828_CHANNEL` enum, you can choose between:
-| **Name**      | **IN+** | **IN-** |
+| **ADS7828_CHANNEL**      | **IN+** | **IN-** |
 |---------------|---------|---------|
-| CHANNEL_X_GND | CHX     | GND     |
+| CHANNEL_X_COM | CHX     | COM     |
 | CHANNEL_0_1   | CH0     | CH1     |
 | CHANNEL_2_3   | CH2     | CH3     |
 | CHANNEL_4_5   | CH4     | CH5     |

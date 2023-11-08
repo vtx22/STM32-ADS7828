@@ -114,7 +114,7 @@ void ADS7828::set_power_mode(ADS7828_PD_MODE mode, bool update_now)
 	// To update the mode we have to transmit the command, so just do a random request
 	if (update_now)
 	{
-		read_digit(CHANNEL_0_GND);
+		read_digit(CHANNEL_0_COM);
 	}
 }
 

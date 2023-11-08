@@ -11,17 +11,17 @@
 
 #define ADS7828_CHANNELS 16
 // Defines the command bits for every possible channel selection (Datasheet Table 2)
-// Choice between "Differential" for voltage between two channels or "Single Ended" for voltage to ground (COM)
+// Choice between "Differential" for voltage between two channels or "Single Ended" for voltage to COM
 enum ADS7828_CHANNEL
 {
-	CHANNEL_0_GND = 0b1000, // Channel 0 to GROUND
-	CHANNEL_1_GND = 0b1100, // Channel 1 to GROUND
-	CHANNEL_2_GND = 0b1001, // Channel 2 to GROUND
-	CHANNEL_3_GND = 0b1101, // Channel 3 to GROUND
-	CHANNEL_4_GND = 0b1010, // Channel 4 to GROUND
-	CHANNEL_5_GND = 0b1110, // Channel 5 to GROUND
-	CHANNEL_6_GND = 0b1011, // Channel 6 to GROUND
-	CHANNEL_7_GND = 0b1111, // Channel 7 to GROUND
+	CHANNEL_0_COM = 0b1000, // Channel 0 to COM
+	CHANNEL_1_COM = 0b1100, // Channel 1 to COM
+	CHANNEL_2_COM = 0b1001, // Channel 2 to COM
+	CHANNEL_3_COM = 0b1101, // Channel 3 to COM
+	CHANNEL_4_COM = 0b1010, // Channel 4 to COM
+	CHANNEL_5_COM = 0b1110, // Channel 5 to COM
+	CHANNEL_6_COM = 0b1011, // Channel 6 to COM
+	CHANNEL_7_COM = 0b1111, // Channel 7 to COM
 	CHANNEL_0_1 = 0b0000,	// Channel 0 to 1
 	CHANNEL_2_3 = 0b0001,	// Channel 2 to 3
 	CHANNEL_4_5 = 0b0010,	// Channel 4 to 5
