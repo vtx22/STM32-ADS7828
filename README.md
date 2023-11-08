@@ -58,6 +58,10 @@ To set a scaling factor for a certain Channel, call
 ```
 adc.set_scaling(ADS7828_CHANNEL channel, float scaling);
 ```
+To get the current scaling factor, call
+```
+float cur_scaling = adc.get_scaling(ADS7828_CHANNEL channel);
+```
 To reset the scaling back to 1, you can call 
 ```
 adc.reset_scaling(ADS7828_CHANNEL channel);

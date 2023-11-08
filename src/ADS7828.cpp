@@ -131,7 +131,6 @@ void ADS7828::set_power_mode(ADS7828_PD_MODE mode)
 
 /**
  * Set the scaling for a channel voltage so that read_voltage returns voltage * scaling
- * Only works for Single-Ended Mode, so only channel voltages to GND!
  *
  * @param channel The Channel to set the scaling for
  * @param scaling Scaling Factor that will be multiplied with the voltage
@@ -139,6 +138,16 @@ void ADS7828::set_power_mode(ADS7828_PD_MODE mode)
 void ADS7828::set_scaling(ADS7828_CHANNEL channel, float scaling)
 {
 	_scaling[channel] = scaling;
+}
+
+/**
+ * Get the current voltage scaling for a channel
+ *
+ * @param channel The Channel to get the scaling for
+ */
+float ADS7828::get_scaling(ADS7828_CHANNEL channel)
+{
+	return _scaling[channel];
 }
 
 /**

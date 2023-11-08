@@ -58,6 +58,7 @@ public:
 	void set_power_mode(ADS7828_PD_MODE mode, bool update_now);
 
 	void set_scaling(ADS7828_CHANNEL channel, float scaling);
+	float get_scaling(ADS7828_CHANNEL channel);
 	void reset_scaling(ADS7828_CHANNEL channel);
 
 private:
