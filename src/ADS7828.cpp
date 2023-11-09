@@ -8,6 +8,7 @@
  */
 ADS7828::ADS7828(I2C_HandleTypeDef *hi2c, uint8_t address) : _hi2c(hi2c), _address(address)
 {
+	init();
 }
 
 /**
@@ -20,11 +21,20 @@ ADS7828::ADS7828(I2C_HandleTypeDef *hi2c, uint8_t address) : _hi2c(hi2c), _addre
  */
 ADS7828::ADS7828(I2C_HandleTypeDef *hi2c, uint8_t address, float external_ref_voltage) : _hi2c(hi2c), _address(address)
 {
+	init();
 	set_ref_voltage_external(external_ref_voltage);
 }
 
 ADS7828::~ADS7828()
 {
+}
+
+void ADS7828::init()
+{
+	reset_scaling();
+
+	// Set the default power mode
+	set_power_mode(_pd_mode);
 }
 
 /**
