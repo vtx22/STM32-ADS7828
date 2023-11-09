@@ -8,6 +8,10 @@
  */
 ADS7828::ADS7828(I2C_HandleTypeDef *hi2c, uint8_t address) : _hi2c(hi2c), _address(address)
 {
+	init();
+
+	// Set the default power mode for internal ref voltage
+	set_power_mode(REF_ON_AD_ON);
 }
 
 /**
@@ -20,11 +24,27 @@ ADS7828::ADS7828(I2C_HandleTypeDef *hi2c, uint8_t address) : _hi2c(hi2c), _addre
  */
 ADS7828::ADS7828(I2C_HandleTypeDef *hi2c, uint8_t address, float external_ref_voltage) : _hi2c(hi2c), _address(address)
 {
+	init();
 	set_ref_voltage_external(external_ref_voltage);
 }
 
 ADS7828::~ADS7828()
 {
+#ifdef ADS7828_DYNAMIC_MEM
+	for (uint8_t c = 0; c < ADS7828_CHANNELS; c++)
+	{
+		delete _buffers[c].data;
+	}
+#endif
+}
+
+/**
+ * ADC class initialisation
+ */
+void ADS7828::init()
+{
+	reset_scaling();
+
 }
 
 /**
@@ -36,7 +56,7 @@ ADS7828::~ADS7828()
  */
 float ADS7828::read_voltage(ADS7828_CHANNEL channel)
 {
-	return read_digit(channel) * _ref_voltage / 4095.0 * _scaling[channel];
+	return (read_digit(channel) / 4095.0 * _ref_voltage * _scaling[channel]);
 }
 
 /**
@@ -53,12 +73,20 @@ uint16_t ADS7828::read_digit(ADS7828_CHANNEL channel)
 	command |= (((uint8_t)channel) << 4);
 	command |= (((uint8_t)_pd_mode) << 2);
 
-	uint8_t data[2] = {0x00, 0x00};
+	uint8_t data[2] = {0};
 
 	HAL_I2C_Master_Transmit(_hi2c, (_address << 1), &command, 1, HAL_MAX_DELAY);
 	HAL_I2C_Master_Receive(_hi2c, (_address << 1), data, 2, HAL_MAX_DELAY);
 
-	return (uint16_t)((data[0] << 8) + data[1]);
+	uint16_t digit = (uint16_t)((data[0] << 8) + data[1]);
+
+	// No averaging
+	if (_buffers[channel].n <= 1)
+	{
+		return digit;
+	}
+
+	// Update the last values by shifting the values in the array
 }
 
 /**
@@ -144,6 +172,7 @@ void ADS7828::set_scaling(ADS7828_CHANNEL channel, float scaling)
  * Get the current voltage scaling for a channel
  *
  * @param channel The Channel to get the scaling for
+ * @return The current scaling factor of the channel
  */
 float ADS7828::get_scaling(ADS7828_CHANNEL channel)
 {
@@ -170,4 +199,64 @@ void ADS7828::reset_scaling()
 	{
 		reset_scaling(static_cast<ADS7828_CHANNEL>(c));
 	}
+}
+
+/**
+ * Enables averaging for a certain channel.
+ *	Whenever get_digit or get_voltage is called, the result will be the average of the last N values.
+ *
+ * @param channel The channel to enable averaging fot
+ * @param n Number of values to average
+ */
+void ADS7828::set_averaging(ADS7828_CHANNEL channel, uint8_t n)
+{
+	// Averaging over 1 value is useless
+	if (n == 1)
+	{
+		return;
+	}
+
+#ifdef ADS7828_DYNAMIC_MEM
+	// Reserve memory to store n last values
+	_buffers[channel].n = n;
+	_buffers[channel].data = new uint16_t[n]{0};
+#else
+	_buffers[channel].n = (n > ADS7828_AVG_MAX) ? ADS7828_AVG_MAX : n;
+	clear_averaging(channel);
+#endif
+}
+
+/**
+ * Clears all current values of the channel and sets them to 0
+ *
+ * @param channel The channel to clear the old values for
+ */
+void ADS7828::clear_averaging(ADS7828_CHANNEL channel)
+{
+	for (uint8_t n = 0; n < _buffers[channel].n; n++)
+	{
+		_buffers[channel].data[n] = 0;
+	}
+}
+
+/**
+ * Disables the averaging and deletes all stored values
+ *
+ * @param channel The channel to disable averaging for
+ */
+void ADS7828::disable_averaging(ADS7828_CHANNEL channel)
+{
+	// Averaging is already disabled
+	if (_buffers[channel].n == 1)
+	{
+		return;
+	}
+
+	_buffers[channel].n = 1;
+
+#ifdef ADS7828_DYNAMIC_MEM
+	delete[] _buffers[channel].data;
+#else
+	clear_averaging(channel);
+#endif
 }
