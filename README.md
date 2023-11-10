@@ -7,6 +7,7 @@ C++ Library for interfacing the ADS7828 AD-Converter with STM32 microcontrollers
 - Internal 2.5V or External Manual Voltage Reference, switchable at runtime
 - Power Down Modes with implicit switching
 - Fixed Scaling for Voltage Divider applications
+- Averaging of the last N values for every channel (dynamic or static storage options)
 
 # Usage
 ### Init
@@ -23,10 +24,11 @@ ADS7828 adc = ADS7828(&hi2c1, 0x48, ref_voltage);
 ### Reading a Channel
 The ADS7828 has 8 Channels in total. You can read the digit value of each channel combination by calling 
 ```
-uint16_t digit = adc.read_digit(ADS7828_CHANNEL channel);
+float digit = adc.read_digit(ADS7828_CHANNEL channel);
 ```
 With 12 Bits resolution the returned value is between 0 and 4095.
 
+:warning: Average filters may apply when enabeled, see [Moving Average](#moving-average-filter)
 
 The ADS7828 supports two types of readings:
 - ***Single-Ended:*** Reads the Channel Voltage with reference to COM
@@ -74,6 +76,27 @@ adc.reset_scaling();
 :warning: Keep in mind, that `CHANNEL_0_1` and `CHANNEL_1_0` for example have different scaling factors!
 
 :warning: Scaling only applies to the **Voltage Reading**, not to the **Digit Reading**!
+
+### Moving Average Filter
+You have the option to enable averaging of the last `n` values for every channel seperately by calling
+```
+adc.set_averaging(ADS7828_CHANNEL channel, uint8_t n);
+```
+The averaging will be applied directly to the digit value, so that `get_digit` returns the average instead of the last value.
+If you want to reset the last `n` values to `0`, call
+```
+adc.clear_averaging(ADS7828_CHANNEL channel);
+```
+To disable averaging call 
+```
+adc.disable_averaging(ADS7828_CHANNEL channel);
+```
+You can choose the way the last values are stored. Generally, the last digits have to be held in an array of at least size `n`. 
+There are two memory usage options available with a define in the header:
+- **Dynamic:** The array gets dynamically allocated by calling `new/delete`
+- **Static:** You can choose the maximum number of values with `ADS7828_AVG_MAX`, for every channel one array of that size is allocated at compile time
+
+To choose, use `#define ADS7828_DYNAMIC_MEM` for dynamic allocation. Otherwise static allocation is used.
 
 ### Reference Voltage
 All measurements done by the ADS7828 are with reference to the specified reference voltage. There are two types of operation:
