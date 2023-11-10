@@ -2,8 +2,10 @@
 #ifndef ADS7828_HPP
 #define ADS7828_HPP
 
+// Change to your specific HAL include when working with a different MCU
 #include "stm32f1xx_hal.h"
 
+#include <stdint.h>
 // Number of ADS7828 channel combinations
 constexpr uint8_t ADS7828_CHANNELS = 16;
 
