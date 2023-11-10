@@ -5,6 +5,9 @@
 #include <stdint.h>
 #include "stm32f1xx_hal.h"
 
+// Number of ADS7828 channel combinations
+constexpr uint8_t ADS7828_CHANNELS = 16;
+
 // If defined, dynamic memory allocation with new/delete is done for averaging
 #define ADS7828_DYNAMIC_MEM
 #ifndef ADS7828_DYNAMIC_MEM
@@ -25,11 +28,35 @@ struct ADS7828_circ_buf_t
 #else
 	uint16_t data[ADS7828_AVG_MAX] = {0}; // Buffer data
 #endif
+	// Calculate the average of the last n elements
+	float average()
+	{
+		float sum = 0;
+
+		for (uint8_t i = 0; i < n; i++)
+		{
+
+			sum += data[i];
+		}
+
+		sum /= n;
+
+		return sum;
+	}
+
+	// Replace the oldest value in the circular buffer
+	void append(uint16_t value)
+	{
+		data[w_index++] = value;
+
+		// Circ buffer rollover
+		if (w_index >= n)
+		{
+			w_index = 0;
+		}
+	}
 
 } typedef ADS7828_circ_buf_t;
-
-// Number of ADS7828 channel combinations
-constexpr uint8_t ADS7828_CHANNELS = 16;
 
 // Defines the command bits for every possible channel selection (Datasheet Table 2)
 // Choice between "Differential" for voltage between two channels or "Single Ended" for voltage to COM
@@ -71,7 +98,7 @@ public:
 	~ADS7828();
 
 	float read_voltage(ADS7828_CHANNEL channel);
-	uint16_t read_digit(ADS7828_CHANNEL channel);
+	float read_digit(ADS7828_CHANNEL channel);
 
 	void set_ref_voltage_external(float ref_voltage);
 	void set_ref_voltage_internal();
@@ -91,11 +118,10 @@ public:
 private:
 	void init();
 
-	float _scaling[ADS7828_CHANNELS]; // Channel Voltage Scaling
-	float _ref_voltage = 2.5;			 // Using the internal 2.5V reference voltage by default
-	ADS7828_PD_MODE _pd_mode;			 // Current Power Down Mode
-
-	ADS7828_circ_buf_t _buffers[ADS7828_CHANNELS];
+	float _scaling[ADS7828_CHANNELS];				  // Channel Voltage Scaling
+	float _ref_voltage = 2.5;							  // Using the internal 2.5V reference voltage by default
+	ADS7828_PD_MODE _pd_mode;							  // Current Power Down Mode
+	ADS7828_circ_buf_t _buffers[ADS7828_CHANNELS]; // Circular buffers to store last values when averaging is enabled
 
 	uint8_t _address;			  // I2C Address
 	I2C_HandleTypeDef *_hi2c; // I2C Handle

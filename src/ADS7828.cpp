@@ -33,7 +33,7 @@ ADS7828::~ADS7828()
 #ifdef ADS7828_DYNAMIC_MEM
 	for (uint8_t c = 0; c < ADS7828_CHANNELS; c++)
 	{
-		delete _buffers[c].data;
+		delete[] _buffers[c].data;
 	}
 #endif
 }
@@ -65,7 +65,7 @@ float ADS7828::read_voltage(ADS7828_CHANNEL channel)
  * @param channel The ADS7828_CHANNEL configuration you want the digit from
  * @return Measured ADC digit (0 - 4095) of given channel configuration
  */
-uint16_t ADS7828::read_digit(ADS7828_CHANNEL channel)
+float ADS7828::read_digit(ADS7828_CHANNEL channel)
 {
 	uint8_t command = 0x00;
 
@@ -85,8 +85,9 @@ uint16_t ADS7828::read_digit(ADS7828_CHANNEL channel)
 		return digit;
 	}
 
-	// Update the last values by shifting the values in the array
-	// TODO
+	// Update the buffer and calculate average
+	_buffers[channel].append(digit);
+	return _buffers[channel].average();
 }
 
 /**
