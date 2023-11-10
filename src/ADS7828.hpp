@@ -2,7 +2,6 @@
 #ifndef ADS7828_HPP
 #define ADS7828_HPP
 
-#include <stdint.h>
 #include "stm32f1xx_hal.h"
 
 // Number of ADS7828 channel combinations
