@@ -73,6 +73,8 @@ adc.reset_scaling();
 
 :warning: Keep in mind, that `CHANNEL_0_1` and `CHANNEL_1_0` for example have different scaling factors!
 
+:warning: Scaling only applies to the **Voltage Reading**, not to the **Digit Reading**!
+
 ### Reference Voltage
 All measurements done by the ADS7828 are with reference to the specified reference voltage. There are two types of operation:
 - ***Internal Reference:*** The ADC uses the internal voltage source of 2.5V as reference
