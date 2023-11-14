@@ -2,9 +2,24 @@
 #ifndef ADS7828_HPP
 #define ADS7828_HPP
 
-// Change to your specific HAL include when working with a different MCU
+// Use the following flags for compiling the right library, e.g.: -D STM32F1
+#if defined(STM32F0)
+#include "stm32f0xx_hal.h"
+#elif defined(STM32F1)
 #include "stm32f1xx_hal.h"
-
+#elif defined(STM32F2)
+#include "stm32f2xx_hal.h"
+#elif defined(STM32F3)
+#include "stm32f3xx_hal.h"
+#elif defined(STM32F4)
+#include "stm32f4xx_hal.h"
+#elif defined(STM32F7)
+#include "stm32f7xx_hal.h"
+#elif defined(STM32F7)
+#include "stm32f7xx_hal.h"
+#else
+#error "Unsupported STM32 microcontroller. Make sure you build with -STM32F1 for example!"
+#endif
 #include <stdint.h>
 // Number of ADS7828 channel combinations
 constexpr uint8_t ADS7828_CHANNELS = 16;
