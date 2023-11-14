@@ -21,6 +21,7 @@ ADS7828 adc = ADS7828(&hi2c1, 0x48, ref_voltage);
 ```
 :warning: This changes the *Power Down Mode* implicitly, see [Power Down Mode](#power-down-mode)
 
+---
 ### Reading a Channel
 The ADS7828 has 8 Channels in total. You can read the digit value of each channel combination by calling 
 ```
@@ -53,6 +54,7 @@ float voltage = adc.read_voltage(ADS7828_CHANNEL channel);
 ```
 This function converts from digits to volts by mapping the digit to the reference voltage, thus the result depends on your reference voltage!
 
+---
 ### Scaling
 If you want to scale the voltage reading every time you call `read_voltage` you can set a fixed scaling factor. This is especially useful when working with voltages dividers, 
 as the ADC voltage gets converted to the actual voltage at the divider.
@@ -77,6 +79,7 @@ adc.reset_scaling();
 
 :warning: Scaling only applies to the **Voltage Reading**, not to the **Digit Reading**!
 
+---
 ### Moving Average Filter
 You have the option to enable averaging of the last `n` values for every channel seperately by calling
 ```
@@ -98,6 +101,7 @@ There are two memory usage options available with a define in the header:
 
 To choose, use `#define ADS7828_DYNAMIC_MEM` for dynamic allocation. Otherwise static allocation is used.
 
+---
 ### Reference Voltage
 All measurements done by the ADS7828 are with reference to the specified reference voltage. There are two types of operation:
 - ***Internal Reference:*** The ADC uses the internal voltage source of 2.5V as reference
@@ -122,6 +126,8 @@ adc.set_ref_voltage_internal();
 :warning: Changing from internal to external reference and vice versa takes some time, measurements less than 1ms after the switch might be inaccurate!
 
 Changing the reference voltage to the correct value ensures that `read_voltage` returns the right voltages. Furthermore, the *Power Down Mode* is changed accordingly. 
+
+---
 ### Power Down Mode
 You can change the Power Down Mode by calling 
 ```
