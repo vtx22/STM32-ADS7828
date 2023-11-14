@@ -10,6 +10,15 @@ C++ Library for interfacing the ADS7828 AD-Converter with STM32 microcontrollers
 - Averaging of the last N values for every channel (dynamic or static storage options)
 
 # Usage
+### Includes and Compilation
+Include the Library via
+```
+#include "ADS7828.hpp"
+```
+Make sure to define which STM32 controller you are using! This is relevant for the selection of the HAL Library. You can select the MCU family with the `-D STM32F1` flag while compiling.
+Or simply define it at the start of your code with `#define STM32F1`. Change accordingly for your STM32!
+
+---
 ### Init
 Create an ADS7828 object with an initialized I2C handle and the device address.
 ```
