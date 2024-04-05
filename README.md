@@ -12,7 +12,7 @@ C++ Library for interfacing the ADS7828 AD-Converter with STM32 microcontrollers
 # Usage
 ### Includes and Compilation
 Include the Library via
-```
+```C++
 #include "ADS7828.hpp"
 ```
 Make sure to define which STM32 controller you are using! This is relevant for the selection of the HAL Library. You can select the MCU family with the `-D STM32F1` flag while compiling.
@@ -21,11 +21,11 @@ Or simply define it at the start of your code with `#define STM32F1`. Change acc
 ---
 ### Init
 Create an ADS7828 object with an initialized I2C handle and the device address.
-```
+```C++
 ADS7828 adc = ADS7828(&hi2c1, 0x48);
 ```
 You can specify an external reference voltage in the constructor:
-```
+```C++
 ADS7828 adc = ADS7828(&hi2c1, 0x48, ref_voltage);
 ```
 :warning: This changes the *Power Down Mode* implicitly, see [Power Down Mode](#power-down-mode)
@@ -33,7 +33,7 @@ ADS7828 adc = ADS7828(&hi2c1, 0x48, ref_voltage);
 ---
 ### Reading a Channel
 The ADS7828 has 8 Channels in total. You can read the digit value of each channel combination by calling 
-```
+```C++
 float digit = adc.read_digit(ADS7828_CHANNEL channel);
 ```
 With 12 Bits resolution the returned value is between 0 and 4095.
@@ -58,7 +58,7 @@ All supported measurements are specified in the `ADS7828_CHANNEL` enum, you can 
 | CHANNEL_7_6   | CH7     | CH6     |
 
 Reading the voltage instead of the digit value is also possible by calling
-```
+```C++
 float voltage = adc.read_voltage(ADS7828_CHANNEL channel);
 ```
 This function converts from digits to volts by mapping the digit to the reference voltage, thus the result depends on your reference voltage!
@@ -68,19 +68,19 @@ This function converts from digits to volts by mapping the digit to the referenc
 If you want to scale the voltage reading every time you call `read_voltage` you can set a fixed scaling factor. This is especially useful when working with voltages dividers, 
 as the ADC voltage gets converted to the actual voltage at the divider.
 To set a scaling factor for a certain Channel, call
-```
+```C++
 adc.set_scaling(ADS7828_CHANNEL channel, float scaling);
 ```
 To get the current scaling factor, call
-```
+```C++
 float cur_scaling = adc.get_scaling(ADS7828_CHANNEL channel);
 ```
 To reset the scaling back to 1, you can call 
-```
+```C++
 adc.reset_scaling(ADS7828_CHANNEL channel);
 ```
 or for all channels 
-```
+```C++
 adc.reset_scaling();
 ```
 
@@ -91,16 +91,16 @@ adc.reset_scaling();
 ---
 ### Moving Average Filter
 You have the option to enable averaging of the last `n` values for every channel seperately by calling
-```
+```C++
 adc.set_averaging(ADS7828_CHANNEL channel, uint8_t n);
 ```
 The averaging will be applied directly to the digit value, so that `get_digit` returns the average instead of the last value.
 If you want to reset the last `n` values to `0`, call
-```
+```C++
 adc.clear_averaging(ADS7828_CHANNEL channel);
 ```
 To disable averaging call 
-```
+```C++
 adc.disable_averaging(ADS7828_CHANNEL channel);
 ```
 You can choose the way the last values are stored. Generally, the last digits have to be held in an array of at least size `n`. 
@@ -119,7 +119,7 @@ Using the internal source means that an input voltage from 0 - 2.5V is mapped to
 The ADC supports external references from 50mV to 5V, which changes the LSB/voltage resolution. See the datasheet for more information.
 
 If you are using an external voltage you have to set the voltage, either in the constructor or by calling 
-```
+```C++
 adc.set_ref_voltage_external(float voltage);
 ```
 :warning: This changes the *Power Down Mode* implicitly, see [Power Down Mode](#power-down-mode)
@@ -127,7 +127,7 @@ adc.set_ref_voltage_external(float voltage);
 :warning: Changing from internal to external reference and vice versa takes some time, measurements less than 1ms after the switch might be inaccurate!
 
 Changing back to the internal reference can ONLY be done by calling 
-```
+```C++
 adc.set_ref_voltage_internal();
 ```
 :warning: This changes the *Power Down Mode* implicitly, see [Power Down Mode](#power-down-mode)
@@ -139,7 +139,7 @@ Changing the reference voltage to the correct value ensures that `read_voltage` 
 ---
 ### Power Down Mode
 You can change the Power Down Mode by calling 
-```
+```C++
 adc.set_power_mode(ADS7828_PD_MODE mode);
 ```
 There are 4 different modes to choose from.
@@ -156,7 +156,7 @@ As you can see, only certain modes can be used with external/internal references
 
 To update the mode, an I2C command has to be send to the ADC. When calling the function, this is done instantly by sending a random read request. 
 However, if you do not want to change the mode until you yourself call the next read request, you can disable the command transmit by calling
-```
+```C++
 adc.set_power_mode(ADS7828_PD_MODE mode, bool update_now = false);
 ```
 :warning: Changing from internal to external reference and vice versa takes some time, measurements less than 1ms after the switch might be inaccurate!
