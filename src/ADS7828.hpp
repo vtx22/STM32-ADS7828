@@ -15,8 +15,6 @@
 #include "stm32f4xx_hal.h"
 #elif defined(STM32F7)
 #include "stm32f7xx_hal.h"
-#elif defined(STM32F7)
-#include "stm32f7xx_hal.h"
 #else
 #error "Unsupported STM32 microcontroller. Make sure you build with -STM32F1 for example!"
 #endif
@@ -38,7 +36,7 @@ constexpr uint8_t ADS7828_CHANNELS = 16;
 struct ADS7828_circ_buf_t
 {
 	uint8_t w_index = 0; // Write index
-	uint8_t n = 0;			// Number of elements
+	uint8_t n = 0;		 // Number of elements
 #ifdef ADS7828_DYNAMIC_MEM
 	uint16_t *data; // Buffer data
 #else
@@ -100,10 +98,10 @@ enum ADS7828_CHANNEL
 // See Datasheet (Table 1) for PD Mode Selection
 enum ADS7828_PD_MODE
 {
-	POWER_DOWN = 0b00,	 // Power Down Between A/D Converter Conversions
-	REF_OFF = 0b01,		 // Internal Reference Voltage OFF and A/D Converter ON
+	POWER_DOWN = 0b00,	  // Power Down Between A/D Converter Conversions
+	REF_OFF = 0b01,		  // Internal Reference Voltage OFF and A/D Converter ON
 	REF_ON_AD_OFF = 0b10, // Internal Reference ON and A/D Converter OFF
-	REF_ON_AD_ON = 0b11	 // Internal Reference ON and A/D Converter ON
+	REF_ON_AD_ON = 0b11	  // Internal Reference ON and A/D Converter ON
 };
 
 class ADS7828
@@ -134,12 +132,12 @@ public:
 private:
 	void init();
 
-	float _scaling[ADS7828_CHANNELS];				  // Channel Voltage Scaling
-	float _ref_voltage = 2.5;							  // Using the internal 2.5V reference voltage by default
-	ADS7828_PD_MODE _pd_mode;							  // Current Power Down Mode
+	float _scaling[ADS7828_CHANNELS];			   // Channel Voltage Scaling
+	float _ref_voltage = 2.5;					   // Using the internal 2.5V reference voltage by default
+	ADS7828_PD_MODE _pd_mode;					   // Current Power Down Mode
 	ADS7828_circ_buf_t _buffers[ADS7828_CHANNELS]; // Circular buffers to store last values when averaging is enabled
 
-	uint8_t _address;			  // I2C Address
+	uint8_t _address;		  // I2C Address
 	I2C_HandleTypeDef *_hi2c; // I2C Handle
 };
 
